@@ -97,7 +97,7 @@ if clicked:
 
         merged["temperature"] = merged["temperature"].astype("float")
 
-        taiwan_geo = gpd.read_file("taiwan_geo_tw97/COUNTY_MOI_1130718.shp")
+        taiwan_geo = gpd.read_file("COUNTY_MOI_1130718.shp")
         taiwan_geo.geometry = taiwan_geo.geometry.simplify(0.01, preserve_topology=True)
         taiwan_geo_json = taiwan_geo.to_json()
         taiwan_geo_json = json.loads(taiwan_geo_json)
