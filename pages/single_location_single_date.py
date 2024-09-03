@@ -75,7 +75,9 @@ st.markdown(
     On this page, we will allow users to select a weather station and a date, and provide temperature information for the selected date within 24 hours. The results will be displayed in three tabs: one with a temperature vs. time line chart, one with the raw data table, and one with the geographical information of the weather station.
     """
 )
-
+st.warning(
+    "The Yunlin station is currently under maintenance, so its data is unavailable."
+)
 with st.container(border=True):
     
     col1, col2 = st.columns(2)
