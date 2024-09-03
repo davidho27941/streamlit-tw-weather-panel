@@ -34,7 +34,7 @@ with snowflake.connector.connect(
             STATIONNAME,
             MIN(OBSTIME),
             MAX(OBSTIME)
-        FROM cwb_dev_transformed.weather_records
+        FROM cwb_dev_transformed.weather_records_v2
         GROUP BY STATIONID, STATIONNAME
         """
     )
@@ -52,7 +52,7 @@ with snowflake.connector.connect(
             COUNTYCODE,
             COORDINATES_TWD67:StationLatitude AS Lat,
             COORDINATES_TWD67:StationLongitude AS Lon
-        FROM  cwb_dev_transformed.geoinfo
+        FROM  cwb_dev_transformed.geoinfo_v2
         WHERE STARTSWITH(STATIONID , 46)
         """
     )
@@ -131,7 +131,7 @@ if clicked:
             f"""
             SELECT 
                 * 
-            FROM cwb_dev_transformed.weather_records 
+            FROM cwb_dev_transformed.weather_records_v2
             WHERE STATIONNAME = '{station_name}'
                 AND OBSTIME between '{selected_date}' AND '{end_date}'
             ORDER BY OBSTIME
@@ -193,7 +193,7 @@ if clicked:
             f"""
             SELECT 
                 COORDINATES_TWD67 
-            FROM WEATHER_DATA.CWB_DEV_TRANSFORMED.GEOINFO 
+            FROM WEATHER_DATA.CWB_DEV_TRANSFORMED.GEOINFO_v2
             WHERE STATIONNAME = '{station_name}'
             LIMIT 1
             """

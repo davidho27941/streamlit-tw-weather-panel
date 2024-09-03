@@ -60,7 +60,7 @@ if clicked:
                 STATIONNAME,
                 OBSTIME,
                 AIRTEMPERATURE
-            FROM cwb_dev_transformed.weather_records
+            FROM cwb_dev_transformed.weather_records_v2
             WHERE OBSTIME BETWEEN '{previous_3:%Y-%m-%d %H:%M:%S}' AND '{latest_time:%Y-%m-%d %H:%M:%S}'
                 AND STARTSWITH(STATIONID , 46)  AND STATIONID != 468100 AND STATIONID != 469020
             ORDER BY OBSTIME
@@ -85,7 +85,7 @@ if clicked:
                 COUNTYCODE,
                 COORDINATES_TWD67:StationLatitude AS Lat,
                 COORDINATES_TWD67:StationLongitude AS Lon
-            FROM  cwb_dev_transformed.geoinfo
+            FROM  cwb_dev_transformed.geoinfo_v2
             WHERE STARTSWITH(STATIONID , 46)
             """
         )
