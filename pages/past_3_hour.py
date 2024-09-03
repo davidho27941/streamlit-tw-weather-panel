@@ -17,11 +17,15 @@ ACCOUNT = os.getenv("SF_ACCOUNT")
 WAREHOUSE = os.getenv("SF_WHAREHOUSE")
 DATABASE = os.getenv("SF_DATABASE")
 
-st.title("Taiwan Weather Panel - Past 3 Hour Data")
+st.title("Taiwan Weather Panel - Latest 3 Hour Data")
 st.markdown(
     """
-    On this page, we will display the temperature data for various counties and cities in Taiwan over the past three hours, with a time interval of 10 minutes. The Yunlin station is currently under maintenance, so its data is unavailable.
+    On this page, we will display the temperature data for various counties and cities in Taiwan over the latest three hours, with a time interval of 10 minutes.
     """
+)
+
+st.warning(
+    "The Yunlin station is currently under maintenance, so its data is unavailable."
 )
 
 with st.container():
@@ -85,16 +89,17 @@ if clicked:
             WHERE STARTSWITH(STATIONID , 46)
             """
         )
-
-    with st.container():
         station_info = pd.DataFrame(
             cursor.fetchall(),
             columns=["Station ID", "Station Name", "country ID", "Lat", "Lon"],
         )
 
+    with st.container():
+        
         merged = recent_weather.merge(station_info, on="Station ID", how="inner")
 
         merged["temperature"] = merged["temperature"].astype("float")
+
         taiwan_geo = gpd.read_file(f"{os.getcwd()}/taiwan_geo_tw97/COUNTY_MOI_1130718.shp")
         
         taiwan_geo.geometry = taiwan_geo.geometry.simplify(0.01, preserve_topology=True)
