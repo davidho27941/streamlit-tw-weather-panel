@@ -43,6 +43,31 @@ with snowflake.connector.connect(
         cursor.fetchall(), columns=["stationID", "stationName", "startDate", "endDate"]
     )
 
+    cursor.execute(
+        """
+        SELECT 
+            DISTINCT STATIONID,
+            STATIONNAME,
+            COUNTYNAME,
+            COUNTYCODE,
+            COORDINATES_TWD67:StationLatitude AS Lat,
+            COORDINATES_TWD67:StationLongitude AS Lon
+        FROM  cwb_dev_transformed.geoinfo
+        WHERE STARTSWITH(STATIONID , 46)
+        """
+    )
+
+    station_geo_table = pd.DataFrame(
+        cursor.fetchall(), columns=[
+            "stationID", 
+            "stationName", 
+            "countryName", 
+            "countryCode", 
+            "startDate", 
+            "endDate"
+        ]
+    )
+
 
 st.title("Taiwan Weather Panel")
 st.markdown(
@@ -52,11 +77,24 @@ st.markdown(
 )
 
 with st.container(border=True):
-    station_name = st.selectbox(
-        "Please select a station:",
-        options=station_table["stationName"].to_list(),
-        index=0,
-    )
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        grouped = station_geo_table.groupby('countryName')
+        
+        country_city_option = st.selectbox(
+            "Please select a Country/City:",
+            options=list(grouped.groups.keys()),
+            index=0,
+        )
+    
+    with col2:
+        station_name = st.selectbox(
+            "Please select a station:",
+            options=grouped.get_group(country_city_option).stationName.to_list(),
+            index=0,
+        )
 
     selected_sataion_table = station_table[station_table["stationName"] == station_name]
 
